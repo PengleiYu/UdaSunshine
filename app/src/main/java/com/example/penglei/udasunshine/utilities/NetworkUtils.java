@@ -1,7 +1,10 @@
 package com.example.penglei.udasunshine.utilities;
 
+import android.net.Uri;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -40,7 +43,17 @@ public class NetworkUtils {
      * @param locationQuery 位置字段
      */
     public static URL buildUrl(String locationQuery) {
-        return null;
+        Uri buildUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
+                .appendQueryParameter(FORMAT_PARAM, format)
+                .appendQueryParameter(UNITS_PARAM, units)
+                .appendQueryParameter(DAYS_PARAM, String.valueOf(numDays))
+                .build();
+        try {
+            return new URL(buildUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
