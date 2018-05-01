@@ -23,23 +23,23 @@ public class MainActivity extends AppCompatActivity {
 
         mWeatherTextView = findViewById(R.id.tv_weather_data);
 
-        queryWeather();
+        loadWeatherData();
     }
 
-    private void queryWeather() {
+    private void loadWeatherData() {
         String location = SunshinePreferences.getPreferredWeatherLocation(this);
-        URL url = NetworkUtils.buildUrl(location);
-        if (url != null) new WeatherTask().execute(url);
+        new FetchWeatherTask().execute(location);
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class WeatherTask extends AsyncTask<URL, Void, String> {
+    private class FetchWeatherTask extends AsyncTask<String, Void, String> {
 
         @Override
-        protected String doInBackground(URL... urls) {
-            if (urls.length == 0) return null;
+        protected String doInBackground(String... strings) {
+            if (strings.length == 0) return null;
             try {
-                return NetworkUtils.getResponseFromHttpUrl(urls[0]);
+                URL url = NetworkUtils.buildUrl(strings[0]);
+                return NetworkUtils.getResponseFromHttpUrl(url);
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
